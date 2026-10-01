@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Calculator</title>
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#4c4ddc">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<style>
+:root{--bg:#e6eaf0;--body:#f6f8fb;--ink:#1b2433;--mute:#6b7689;--key:#fff;--fn:#dfe4ee;--op:#4c4ddc;--opt:#fff;--eq:#f2b134;--eqt:#2a1c00;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#10141c;--body:#1a2030;--ink:#eef1f7;--mute:#8c97ab;--key:#262e42;--fn:#323b52;--op:#7a7bf0;--opt:#10141c;--eq:#f2b134;--eqt:#2a1c00}}
+:root[data-theme="dark"]{--bg:#10141c;--body:#1a2030;--ink:#eef1f7;--mute:#8c97ab;--key:#262e42;--fn:#323b52;--op:#7a7bf0;--opt:#10141c;--eq:#f2b134;--eqt:#2a1c00}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;min-height:100vh;background:var(--bg);color:var(--ink);font-family:"Segoe UI",system-ui,-apple-system,Roboto,sans-serif;display:flex;justify-content:center;align-items:center;padding:12px}
+.calc{width:100%;max-width:380px;background:var(--body);border-radius:28px;padding:16px;box-shadow:0 18px 40px rgba(20,30,50,.18)}
+.bar{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.bar button{background:none;border:1px solid var(--fn);color:var(--mute);border-radius:999px;padding:6px 12px;font-size:13px;cursor:pointer}
+.bar button[aria-pressed=true]{background:var(--op);border-color:var(--op);color:var(--opt)}
+.bar div{display:flex;gap:6px}
+.screen{min-height:104px;padding:6px 6px 12px;text-align:right;display:flex;flex-direction:column;justify-content:flex-end;overflow:hidden}
+.expr{font-size:22px;color:var(--mute);min-height:30px;word-break:break-all}
+.res{font-size:46px;font-weight:600;letter-spacing:-1px;min-height:56px;overflow-x:auto;white-space:nowrap}
+.res.err{font-size:22px;color:#d94b4b}
+.hist{max-height:0;overflow:hidden;transition:max-height .25s}
+.hist.open{max-height:130px;overflow-y:auto;margin-bottom:8px}
+.hist button{display:block;width:100%;text-align:right;background:none;border:0;color:var(--mute);font-size:14px;padding:4px 6px;cursor:pointer}
+.sci{display:none;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:8px}
+.sci.show{display:grid}
+.pad{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.k{border:0;border-radius:18px;height:60px;font-size:24px;background:var(--key);color:var(--ink);cursor:pointer;transition:transform .08s}
+.k:active{transform:scale(.94)}
+.k:focus-visible,.bar button:focus-visible{outline:3px solid var(--op);outline-offset:2px}
+.k.f{background:var(--fn);font-size:20px}
+.sci .k{height:44px;font-size:16px;background:var(--fn)}
+.k.o{background:var(--op);color:var(--opt)}
+.k.e{background:var(--eq);color:var(--eqt);font-weight:700}
+[hidden]{display:none!important}
+.tabs{display:flex;gap:6px;overflow-x:auto;margin-bottom:10px;padding-bottom:2px}
+.tabs button{flex:none;background:var(--fn);color:var(--mute);border:0;border-radius:999px;padding:8px 14px;font-size:14px;cursor:pointer}
+.tabs button[aria-selected=true]{background:var(--op);color:var(--opt)}
+.tool label{display:block;font-size:13px;color:var(--mute);margin:10px 0 4px}
+.tool input,.tool select{width:100%;padding:12px;border-radius:12px;border:1px solid var(--fn);background:var(--key);color:var(--ink);font-size:16px}
+.tool input:focus-visible,.tool select:focus-visible,.tabs button:focus-visible{outline:3px solid var(--op);outline-offset:2px}
+.row{display:flex;gap:8px}.row>*{flex:1;min-width:0}
+.out{margin-top:14px;padding:14px;border-radius:16px;background:var(--fn);font-size:15px;line-height:1.6}
+.out b{font-size:24px;display:block}
+.note{font-size:12px;color:var(--mute);margin-top:8px}
+@media (prefers-reduced-motion:reduce){.k,.hist{transition:none}}
+</style>
+</head>
+<body>
+<main class="calc">
+  <nav class="tabs" id="tabs" aria-label="Tools"></nav>
+  <section class="tool" id="tool" hidden></section>
+  <section id="p-calc">
+  <div class="bar">
+    <div>
+      <button id="sciBtn" aria-pressed="false">Scientific</button>
+      <button id="degBtn" aria-pressed="true">DEG</button>
+    </div>
+    <button id="histBtn" aria-pressed="false">History</button>
+  </div>
+  <div class="hist" id="hist"></div>
+  <div class="screen"><div class="expr" id="expr"></div><div class="res" id="res">0</div></div>
+  <div class="sci" id="sci">
+    <button class="k" data-k="sin(">sin</button><button class="k" data-k="cos(">cos</button><button class="k" data-k="tan(">tan</button><button class="k" data-k="log(">log</button><button class="k" data-k="ln(">ln</button>
+    <button class="k" data-k="√(">√</button><button class="k" data-k="^">xʸ</button><button class="k" data-k="π">π</button><button class="k" data-k="(">(</button><button class="k" data-k=")">)</button>
+  </div>
+  <div class="pad">
+    <button class="k f" data-k="AC">AC</button><button class="k f" data-k="DEL">⌫</button><button class="k f" data-k="%">%</button><button class="k o" data-k="÷">÷</button>
+    <button class="k" data-k="7">7</button><button class="k" data-k="8">8</button><button class="k" data-k="9">9</button><button class="k o" data-k="×">×</button>
+    <button class="k" data-k="4">4</button><button class="k" data-k="5">5</button><button class="k" data-k="6">6</button><button class="k o" data-k="−">−</button>
+    <button class="k" data-k="1">1</button><button class="k" data-k="2">2</button><button class="k" data-k="3">3</button><button class="k o" data-k="+">+</button>
+    <button class="k" data-k="0">0</button><button class="k" data-k=".">.</button><button class="k f" data-k="NEG">±</button><button class="k e" data-k="=">=</button>
+  </div>
+  </section>
+</main>
+<script>
+(function(){
+  var expr="", justEq=false, deg=true, history=[];
+  var $=function(i){return document.getElementById(i)};
+  var exprEl=$("expr"), resEl=$("res");
+  var PI="(3.141592653589793)";
+  function rad(x){return deg?x*Math.PI/180:x}
+  var scope={S:function(x){return Math.sin(rad(x))},C:function(x){return Math.cos(rad(x))},
+    T:function(x){return Math.tan(rad(x))},Q:Math.sqrt,L:Math.log10,N:Math.log};
+  function calc(src){
+    var e=src.replace(/×/g,"*").replace(/÷/g,"/").replace(/−/g,"-").replace(/\^/g,"**")
+      .replace(/π/g,PI).replace(/%/g,"/100")
+      .replace(/sin\(/g,"S(").replace(/cos\(/g,"C(").replace(/tan\(/g,"T(")
+      .replace(/√\(/g,"Q(").replace(/log\(/g,"L(").replace(/ln\(/g,"N(");
+    var o=(e.match(/\(/g)||[]).length-(e.match(/\)/g)||[]).length;
+    while(o-->0)e+=")";
+    e=e.replace(/([\d)])\s*(?=[SCTQLN]\(|\()/g,"$1*");
+    if(!/^(?:[0-9+\-*\/().\s]|[SCTQLN]\()*$/.test(e))throw 0;
+    var r=Function("S","C","T","Q","L","N","return ("+e+")")(scope.S,scope.C,scope.T,scope.Q,scope.L,scope.N);
+    if(typeof r!=="number"||!isFinite(r))throw 0;
+    return r;
+  }
+  function fmt(r){return String(parseFloat(r.toPrecision(12)))}
+  function render(final){
+    exprEl.textContent=expr;
+    resEl.classList.remove("err");
+    if(!expr){resEl.textContent="0";return}
+    try{resEl.textContent=fmt(calc(expr))}
+    catch(_){
+      if(final){resEl.textContent="Expression galat hai";resEl.classList.add("err")}
+    }
+  }
+  function press(k){
+    var last=expr.slice(-1), isOp=/[+−×÷^]/.test(k);
+    if(k==="AC"){expr="";justEq=false;render();return}
+    if(k==="DEL"){expr=expr.replace(/(sin\(|cos\(|tan\(|log\(|ln\(|√\(|.)$/,"");render();return}
+    if(k==="NEG"){
+      var m=expr.match(/(\d+\.?\d*)$/);
+      if(m){var s=expr.length-m[1].length;
+        expr=(expr[s-1]==="−"&&(s<2||/[+−×÷(^]/.test(expr[s-2])))?expr.slice(0,s-1)+m[1]:expr.slice(0,s)+"−"+m[1]}
+      else if(!expr)expr="−";
+      render();return}
+    if(k==="="){
+      if(!expr)return;
+      try{var r=fmt(calc(expr));history.unshift({e:expr,r:r});expr=r.replace("-","−");justEq=true;exprEl.textContent=history[0].e+" =";resEl.textContent=r;resEl.classList.remove("err");drawHist()}
+      catch(_){render(true)}
+      return}
+    if(justEq){ if(!isOp&&k!=="%")expr=""; justEq=false }
+    if(isOp){
+      if(!expr&&k!=="−")return;
+      if(/[+−×÷^]$/.test(expr)&&expr.length>1)expr=expr.slice(0,-1);
+    }
+    if(k==="."){var seg=expr.split(/[^0-9.]/).pop();if(seg.indexOf(".")>-1)return;if(!seg)k="0."}
+    if(k==="%"&&(!expr||/[+−×÷^(]$/.test(expr)))return;
+    expr+=k;render();
+  }
+  function drawHist(){
+    var h=$("hist");h.innerHTML="";
+    history.slice(0,20).forEach(function(i){
+      var b=document.createElement("button");b.textContent=i.e+" = "+i.r;
+      b.onclick=function(){expr=i.r.replace("-","−");justEq=false;render()};
+      h.appendChild(b);
+    });
+  }
+  document.querySelectorAll("[data-k]").forEach(function(b){b.addEventListener("click",function(){press(b.dataset.k)})});
+  function toggle(btn,fn){btn.addEventListener("click",function(){var on=btn.getAttribute("aria-pressed")!=="true";btn.setAttribute("aria-pressed",on);fn(on)})}
+  toggle($("sciBtn"),function(on){$("sci").classList.toggle("show",on)});
+  toggle($("histBtn"),function(on){$("hist").classList.toggle("open",on)});
+  toggle($("degBtn"),function(on){deg=on;$("degBtn").textContent=on?"DEG":"RAD";render()});
+  var tool=$("tool"), nav=$("tabs");
+  var tabs=[["calc","Calculator"],["conv","Converter"],["emi","EMI"],["gst","GST / Discount"],["age","Age"],["bmi","BMI"]];
+  var CAT={Lambai:{m:1,km:1000,cm:.01,mm:.001,mile:1609.344,ft:.3048,inch:.0254},
+    Vazan:{kg:1,g:.001,mg:1e-6,quintal:100,lb:.45359237,oz:.028349523},
+    Taapman:{"°C":1,"°F":1,"K":1},
+    Mudra:null};
+  var rates={"₹ INR":1,"$ USD":88,"€ EUR":102,"£ GBP":117,"AED":24};
+  var n=function(id){return parseFloat($(id).value)};
+  var inr=function(x){return x.toLocaleString("en-IN",{maximumFractionDigits:2})};
+  var field=function(l,id,a){return '<label for="'+id+'">'+l+'</label><input id="'+id+'" inputmode="decimal" '+(a||"")+'>'};
+  var bad=function(){$("o").textContent="Sahi values daaliye"};
+  function run(fn){tool.oninput=fn;fn()}
+  var tools={
+    conv:function(){
+      var cur="";
+      tool.innerHTML='<label for="c">Category</label><select id="c">'+Object.keys(CAT).map(function(c){return "<option>"+c+"</option>"}).join("")+'</select>'
+        +'<div class="row"><div>'+field("Value","v",'value="1"')+'</div><div><label for="f">Se</label><select id="f"></select></div></div>'
+        +'<label for="t">Mein</label><select id="t"></select><div id="rt"></div><div class="out" id="o"></div>';
+      function fill(){
+        var c=$("c").value, keys=Object.keys(c==="Mudra"?rates:CAT[c]);
+        var opts=keys.map(function(k){return "<option>"+k+"</option>"}).join("");
+        $("f").innerHTML=opts;$("t").innerHTML=opts;$("t").selectedIndex=1;
+        $("rt").innerHTML=c==="Mudra"?'<p class="note">Rates andaaze ke hain (₹ mein). Apne hisaab se badlein:</p><div class="row">'
+          +keys.slice(1).map(function(k){return '<input aria-label="'+k+' rate" data-k="'+k+'" value="'+rates[k]+'" inputmode="decimal">'}).join("")+'</div>':"";
+      }
+      run(function(){
+        if($("c").value!==cur){cur=$("c").value;fill()}
+        tool.querySelectorAll("[data-k]").forEach(function(e){var x=parseFloat(e.value);if(x>0)rates[e.dataset.k]=x});
+        var c=cur,v=n("v"),f=$("f").value,t=$("t").value,r;
+        if(isNaN(v)){bad();return}
+        if(c==="Taapman"){var cel=f==="°C"?v:f==="°F"?(v-32)*5/9:v-273.15;r=t==="°C"?cel:t==="°F"?cel*9/5+32:cel+273.15}
+        else{var tb=c==="Mudra"?rates:CAT[c];r=v*tb[f]/tb[t]}
+        $("o").innerHTML=v+" "+f+" =<b>"+inr(parseFloat(r.toPrecision(10)))+" "+t+"</b>";
+      });
+    },
+    emi:function(){
+      tool.innerHTML=field("Loan amount (₹)","a",'value="500000"')+field("Saalana byaaj (%)","r",'value="9"')+field("Samay (saal)","y",'value="5"')+'<div class="out" id="o"></div>';
+      run(function(){
+        var P=n("a"),r=n("r")/1200,m=n("y")*12;
+        if(!(P>0&&m>0&&r>=0)){bad();return}
+        var e=r?P*r*Math.pow(1+r,m)/(Math.pow(1+r,m)-1):P/m,t=e*m;
+        $("o").innerHTML="Monthly EMI<b>₹ "+inr(e)+"</b>Kul byaaj: ₹ "+inr(t-P)+"<br>Kul bhugtaan: ₹ "+inr(t);
+      });
+    },
+    gst:function(){
+      tool.innerHTML=field("Amount (₹)","a",'value="1000"')+field("Rate (%)","r",'value="18"')
+        +'<label for="m">Kya karna hai</label><select id="m"><option value="add">GST jodo</option><option value="rem">Price se GST alag karo</option><option value="dis">Discount lagao</option></select><div class="out" id="o"></div>';
+      run(function(){
+        var a=n("a"),r=n("r"),m=$("m").value;
+        if(!(a>=0&&r>=0)){bad();return}
+        if(m==="add"){var g=a*r/100;$("o").innerHTML="Kul price<b>₹ "+inr(a+g)+"</b>GST: ₹ "+inr(g)}
+        else if(m==="rem"){var b=a*100/(100+r);$("o").innerHTML="Base price<b>₹ "+inr(b)+"</b>GST: ₹ "+inr(a-b)}
+        else{var d=a*r/100;$("o").innerHTML="Final price<b>₹ "+inr(a-d)+"</b>Bachat: ₹ "+inr(d)}
+      });
+    },
+    age:function(){
+      tool.innerHTML='<label for="d">Janam tithi</label><input id="d" type="date"><div class="out" id="o">Tithi chuniye</div>';
+      run(function(){
+        var v=$("d").value;if(!v)return;
+        var b=new Date(v+"T00:00:00"),t=new Date();t.setHours(0,0,0,0);
+        if(b>t){$("o").textContent="Tithi aaj se pehle ki honi chahiye";return}
+        var y=t.getFullYear()-b.getFullYear(),mo=t.getMonth()-b.getMonth(),d=t.getDate()-b.getDate();
+        if(d<0){mo--;d+=new Date(t.getFullYear(),t.getMonth(),0).getDate()}
+        if(mo<0){y--;mo+=12}
+        var nb=new Date(t.getFullYear(),b.getMonth(),b.getDate());if(nb<t)nb.setFullYear(t.getFullYear()+1);
+        $("o").innerHTML="Umar<b>"+y+" saal "+mo+" mahine "+d+" din</b>Kul din: "+Math.round((t-b)/864e5)+"<br>Agla birthday: "+Math.round((nb-t)/864e5)+" din baad";
+      });
+    },
+    bmi:function(){
+      tool.innerHTML=field("Height (cm)","h",'value="170"')+field("Weight (kg)","w",'value="65"')+'<div class="out" id="o"></div><p class="note">Ye sirf mota andaaza hai, doctor ki salah ka vikalp nahin.</p>';
+      run(function(){
+        var h=n("h")/100,w=n("w");
+        if(!(h>0&&w>0)){bad();return}
+        var b=w/h/h;
+        $("o").innerHTML="BMI<b>"+b.toFixed(1)+"</b>"+(b<18.5?"Kam vazan":b<25?"Normal":b<30?"Zyada vazan":"Motapa");
+      });
+    }
+  };
+  function show(id){
+    [].forEach.call(nav.children,function(b,i){b.setAttribute("aria-selected",tabs[i][0]===id)});
+    $("p-calc").hidden=id!=="calc";tool.hidden=id==="calc";
+    if(id!=="calc")tools[id]();
+  }
+  tabs.forEach(function(t,i){
+    var b=document.createElement("button");b.textContent=t[1];b.setAttribute("aria-selected",i===0);
+    b.onclick=function(){show(t[0])};nav.appendChild(b);
+  });
+  document.addEventListener("keydown",function(ev){
+    if(/INPUT|SELECT/.test(ev.target.tagName)||$("p-calc").hidden)return;
+    var k=ev.key;
+    if(/^[0-9.()]$/.test(k))press(k);
+    else if(k==="+")press("+");else if(k==="-")press("−");
+    else if(k==="*"||k==="x")press("×");else if(k==="/"){ev.preventDefault();press("÷")}
+    else if(k==="^")press("^");else if(k==="%")press("%");
+    else if(k==="Enter"||k==="="){ev.preventDefault();press("=")}
+    else if(k==="Backspace")press("DEL");else if(k==="Escape")press("AC");
+  });
+})();
+</script>
+<script>if("serviceWorker" in navigator){window.addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){})})}</script>
+</body>
+</html>
