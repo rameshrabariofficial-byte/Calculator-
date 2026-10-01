@@ -1,0 +1,209 @@
+From: <Saved by Blink>
+Snapshot-Content-Location: file:///storage/emulated/0/Download/index.html
+Subject: Calculator
+Date: Thu, 1 Oct 2026 11:29:31 +0530
+MIME-Version: 1.0
+Content-Type: multipart/related;
+	type="text/html";
+	boundary="----MultipartBoundary--hjR6U9HzK0YVy1Ycf7DJTb73DT9A6yZfADxMGx561F----"
+
+
+------MultipartBoundary--hjR6U9HzK0YVy1Ycf7DJTb73DT9A6yZfADxMGx561F----
+Content-Type: text/html
+Content-ID: <frame-92650D89AC8F24F6591209A7B1A0CC5B@mhtml.blink>
+Content-Transfer-Encoding: quoted-printable
+Content-Location: file:///storage/emulated/0/Download/index.html
+
+<!DOCTYPE html><html lang=3D"hi"><head><meta http-equiv=3D"Content-Type" co=
+ntent=3D"text/html; charset=3DUTF-8"><link rel=3D"stylesheet" type=3D"text/=
+css" href=3D"cid:css-bd669b38-8bd6-46b6-945e-beea35b0ddec@mhtml.blink" />
+
+<meta name=3D"viewport" content=3D"width=3Ddevice-width, initial-scale=3D1,=
+ viewport-fit=3Dcover">
+<title>Calculator</title>
+<link rel=3D"manifest" href=3D"file:///storage/emulated/0/Download/manifest=
+.webmanifest">
+<meta name=3D"theme-color" content=3D"#4c4ddc">
+<link rel=3D"icon" href=3D"file:///storage/emulated/0/Download/icon-192.png=
+">
+<link rel=3D"apple-touch-icon" href=3D"file:///storage/emulated/0/Download/=
+icon-192.png">
+
+</head>
+<body>
+<main class=3D"calc">
+  <nav class=3D"tabs" id=3D"tabs" aria-label=3D"Tools"></nav>
+ =20
+  <section id=3D"p-calc">
+  <div class=3D"bar">
+    <div>
+      <button id=3D"sciBtn" aria-pressed=3D"false">Scientific</button>
+      <button id=3D"degBtn" aria-pressed=3D"true">DEG</button>
+    </div>
+    <button id=3D"histBtn" aria-pressed=3D"false">History</button>
+  </div>
+  <div class=3D"hist" id=3D"hist"></div>
+  <div class=3D"screen"><div class=3D"expr" id=3D"expr"></div><div class=3D=
+"res" id=3D"res">0</div></div>
+  <div class=3D"sci" id=3D"sci">
+    <button class=3D"k" data-k=3D"sin(">sin</button><button class=3D"k" dat=
+a-k=3D"cos(">cos</button><button class=3D"k" data-k=3D"tan(">tan</button><b=
+utton class=3D"k" data-k=3D"log(">log</button><button class=3D"k" data-k=3D=
+"ln(">ln</button>
+    <button class=3D"k" data-k=3D"=E2=88=9A(">=E2=88=9A</button><button cla=
+ss=3D"k" data-k=3D"^">x=CA=B8</button><button class=3D"k" data-k=3D"=CF=80"=
+>=CF=80</button><button class=3D"k" data-k=3D"(">(</button><button class=3D=
+"k" data-k=3D")">)</button>
+  </div>
+  <div class=3D"pad">
+    <button class=3D"k f" data-k=3D"AC">AC</button><button class=3D"k f" da=
+ta-k=3D"DEL">=E2=8C=AB</button><button class=3D"k f" data-k=3D"%">%</button=
+><button class=3D"k o" data-k=3D"=C3=B7">=C3=B7</button>
+    <button class=3D"k" data-k=3D"7">7</button><button class=3D"k" data-k=
+=3D"8">8</button><button class=3D"k" data-k=3D"9">9</button><button class=
+=3D"k o" data-k=3D"=C3=97">=C3=97</button>
+    <button class=3D"k" data-k=3D"4">4</button><button class=3D"k" data-k=
+=3D"5">5</button><button class=3D"k" data-k=3D"6">6</button><button class=
+=3D"k o" data-k=3D"=E2=88=92">=E2=88=92</button>
+    <button class=3D"k" data-k=3D"1">1</button><button class=3D"k" data-k=
+=3D"2">2</button><button class=3D"k" data-k=3D"3">3</button><button class=
+=3D"k o" data-k=3D"+">+</button>
+    <button class=3D"k" data-k=3D"0">0</button><button class=3D"k" data-k=
+=3D".">.</button><button class=3D"k f" data-k=3D"NEG">=C2=B1</button><butto=
+n class=3D"k e" data-k=3D"=3D">=3D</button>
+  </div>
+  </section>
+</main>
+
+
+
+
+</body></html>
+------MultipartBoundary--hjR6U9HzK0YVy1Ycf7DJTb73DT9A6yZfADxMGx561F----
+Content-Type: text/css
+Content-Transfer-Encoding: quoted-printable
+Content-Location: cid:css-bd669b38-8bd6-46b6-945e-beea35b0ddec@mhtml.blink
+
+@charset "utf-8";
+
+:root { --bg: #e6eaf0; --body: #f6f8fb; --ink: #1b2433; --mute: #6b7689; --=
+key: #fff; --fn: #dfe4ee; --op: #4c4ddc; --opt: #fff; --eq: #f2b134; --eqt:=
+ #2a1c00; box-sizing: border-box; padding-top: env(safe-area-inset-top,0px)=
+; padding-bottom: env(safe-area-inset-bottom,0px); }
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme=3D"light"]) { --bg: #10141c; --body: #1a2030; --ink=
+: #eef1f7; --mute: #8c97ab; --key: #262e42; --fn: #323b52; --op: #7a7bf0; -=
+-opt: #10141c; --eq: #f2b134; --eqt: #2a1c00; }
+}
+
+:root[data-theme=3D"dark"] { --bg: #10141c; --body: #1a2030; --ink: #eef1f7=
+; --mute: #8c97ab; --key: #262e42; --fn: #323b52; --op: #7a7bf0; --opt: #10=
+141c; --eq: #f2b134; --eqt: #2a1c00; }
+
+html { scroll-padding-top: env(safe-area-inset-top,0px); }
+
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+body { margin: 0px; min-height: 100vh; background: var(--bg); color: var(--=
+ink); font-family: "Segoe UI", system-ui, -apple-system, Roboto, sans-serif=
+; display: flex; justify-content: center; align-items: center; padding: 12p=
+x; }
+
+.calc { width: 100%; max-width: 380px; background: var(--body); border-radi=
+us: 28px; padding: 16px; box-shadow: rgba(20, 30, 50, 0.18) 0px 18px 40px; =
+}
+
+.bar { display: flex; justify-content: space-between; align-items: center; =
+margin-bottom: 8px; }
+
+.bar button { background: none; border: 1px solid var(--fn); color: var(--m=
+ute); border-radius: 999px; padding: 6px 12px; font-size: 13px; cursor: poi=
+nter; }
+
+.bar button[aria-pressed=3D"true"] { background: var(--op); border-color: v=
+ar(--op); color: var(--opt); }
+
+.bar div { display: flex; gap: 6px; }
+
+.screen { min-height: 104px; padding: 6px 6px 12px; text-align: right; disp=
+lay: flex; flex-direction: column; justify-content: flex-end; overflow: hid=
+den; }
+
+.expr { font-size: 22px; color: var(--mute); min-height: 30px; word-break: =
+break-all; }
+
+.res { font-size: 46px; font-weight: 600; letter-spacing: -1px; min-height:=
+ 56px; overflow-x: auto; white-space: nowrap; }
+
+.res.err { font-size: 22px; color: rgb(217, 75, 75); }
+
+.hist { max-height: 0px; overflow: hidden; transition: max-height 0.25s; }
+
+.hist.open { max-height: 130px; overflow-y: auto; margin-bottom: 8px; }
+
+.hist button { display: block; width: 100%; text-align: right; background: =
+none; border: 0px; color: var(--mute); font-size: 14px; padding: 4px 6px; c=
+ursor: pointer; }
+
+.sci { display: none; grid-template-columns: repeat(5, 1fr); gap: 8px; marg=
+in-bottom: 8px; }
+
+.sci.show { display: grid; }
+
+.pad { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+
+.k { border: 0px; border-radius: 18px; height: 60px; font-size: 24px; backg=
+round: var(--key); color: var(--ink); cursor: pointer; transition: transfor=
+m 0.08s; }
+
+.k:active { transform: scale(0.94); }
+
+.k:focus-visible, .bar button:focus-visible { outline: 3px solid var(--op);=
+ outline-offset: 2px; }
+
+.k.f { background: var(--fn); font-size: 20px; }
+
+.sci .k { height: 44px; font-size: 16px; background: var(--fn); }
+
+.k.o { background: var(--op); color: var(--opt); }
+
+.k.e { background: var(--eq); color: var(--eqt); font-weight: 700; }
+
+[hidden] { display: none !important; }
+
+.tabs { display: flex; gap: 6px; overflow-x: auto; margin-bottom: 10px; pad=
+ding-bottom: 2px; }
+
+.tabs button { flex: 0 0 auto; background: var(--fn); color: var(--mute); b=
+order: 0px; border-radius: 999px; padding: 8px 14px; font-size: 14px; curso=
+r: pointer; }
+
+.tabs button[aria-selected=3D"true"] { background: var(--op); color: var(--=
+opt); }
+
+.tool label { display: block; font-size: 13px; color: var(--mute); margin: =
+10px 0px 4px; }
+
+.tool input, .tool select { width: 100%; padding: 12px; border-radius: 12px=
+; border: 1px solid var(--fn); background: var(--key); color: var(--ink); f=
+ont-size: 16px; }
+
+.tool input:focus-visible, .tool select:focus-visible, .tabs button:focus-v=
+isible { outline: 3px solid var(--op); outline-offset: 2px; }
+
+.row { display: flex; gap: 8px; }
+
+.row > * { flex: 1 1 0%; min-width: 0px; }
+
+.out { margin-top: 14px; padding: 14px; border-radius: 16px; background: va=
+r(--fn); font-size: 15px; line-height: 1.6; }
+
+.out b { font-size: 24px; display: block; }
+
+.note { font-size: 12px; color: var(--mute); margin-top: 8px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .k, .hist { transition: none; }
+}
+------MultipartBoundary--hjR6U9HzK0YVy1Ycf7DJTb73DT9A6yZfADxMGx561F------
